@@ -1,0 +1,136 @@
+Assignment-1 --- Create two tables: EmployeeDetails and EmployeeSalary.
+
+Columns for EmployeeDetails: EmpId FullName ManagerId DateOfJoining City && Columns for EmployeeSalary: : EmpId Project Salary Variable.
+
+Table Creation:
+
+Columns : EmpId 
+FullName
+ManagerId
+DateOfJoining
+City
+ 
+EmployeeDetails:
+
+
+CREATE TABLE EmployeeDetails (
+    EmpId Integer,
+    FullName varchar(255),
+    ManagerId Integer,
+    DateOfJoining date,
+    City varchar(255)
+);
+
+---------------------------------------------
+Table EmployeeSalary:
+
+CREATE TABLE EmployeeSalary (
+    EmpId Integer,
+    Project varchar(20),
+    Salary Integer,
+   );
+Query OK, 0 rows affected (0.03 sec)
+
+SQL Query to fetch records that are present in one table but not in another table.
+
+Using left join:
+
+SELECT EmployeeDetails.*
+FROM EmployeeDetails
+LEFT JOIN EmployeeSalary ON EmployeeDetails.EmpId = EmployeeSalary.EmpId
+WHERE EmployeeSalary.EmpId IS NULL;
+
+*********************
+
+
+SQL query to fetch all the employees who are not working on any project.
+
+
+SELECT *
+FROM EmployeeDetails
+WHERE EmpId NOT IN (
+    SELECT EmpId
+    FROM EmployeeSalary
+    WHERE Project IS NOT NULL
+);
+
+
+*********************
+SQL query to fetch all the Employees from EmployeeDetails who joined in the Year 2020.
+
+SELECT *
+FROM EmployeeDetails
+WHERE EmpId NOT IN (
+    SELECT EmpId
+    FROM EmployeeSalary
+    WHERE Project IS NOT NULL
+);
+
+*********************
+
+
+Fetch all employees from EmployeeDetails who have a salary record in EmployeeSalary.
+
+SELECT *
+FROM EmployeeDetails
+WHERE EmpId IN (
+    SELECT EmpId
+    FROM EmployeeSalary
+);
+
+*********************
+Write an SQL query to fetch a project-wise count of employees.
+
+For the Count:
+
+SELECT Project, COUNT(*) AS EmployeeCount
+FROM EmployeeSalary
+GROUP BY Project;
+
+*********************
+Fetch employee names and salaries even if the salary value is not present for the employee.
+
+
+SELECT EmployeeDetails.FullName, COALESCE(EmployeeSalary.Salary, 'No Salary') AS Salary
+FROM EmployeeDetails
+LEFT JOIN EmployeeSalary ON EmployeeDetails.EmpId = EmployeeSalary.EmpId;
+
+*********************
+Write an SQL query to fetch all the Employees who are also managers.
+
+SELECT e.FullName
+FROM EmployeeDetails e
+JOIN EmployeeDetails m ON e.EmpId = m.ManagerId;
+
+*********************
+
+Write an SQL query to fetch duplicate records from EmployeeDetails.
+
+SELECT EmpId, FullName, COUNT(*) as dc
+FROM EmployeeDetails
+GROUP BY EmpId, FullName
+HAVING COUNT(*) > 1;
+
+*********************
+Write an SQL query to fetch only odd rows from the table.
+
+SELECT *
+FROM (
+    SELECT *, ROW_NUMBER() OVER () AS rn
+    FROM EmployeeDetails
+) AS SubQuery
+WHERE rn % 2 = 1;
+
+*********************
+
+Write a query to find the 3rd highest salary from a table without top or limit keyword.
+
+
+SELECT Salary AS highest_salary
+FROM EmployeeSalary
+ORDER BY Salary DESC
+OFFSET 2 ROWS
+FETCH NEXT 1 ROWS ONLY;
+
+
+---------------------------------------------
